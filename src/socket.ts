@@ -35,7 +35,7 @@ export const handleSocketConnection = (io: Server, socket: Socket) => {
                         console.log('¡Tiempo agotado! partida: ' + gameId);
                         clearInterval(timers[gameId]);
                         delete timers[gameId];
-                        io.to(gameId).emit('endGame', `${mins}:${secs}`);q  q   
+                        io.to(gameId).emit('endGame', `${mins}:${secs}`);  
                     } else {
                         io.to(gameId).emit('timer', `${mins}:${secs}`);
                     }
