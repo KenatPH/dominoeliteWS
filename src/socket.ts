@@ -5,23 +5,27 @@ const moment = require('moment');
 let timers: { [key: string]: NodeJS.Timeout } = {};
 
 export const handleSocketConnection = (io: Server, socket: Socket) => {
-    console.log('Un usuario se ha conectado');
-
+    
     socket.on('joinGame', (data) => {
+        // console.log('Un usuario se ha conectado');
 
-        console.log(data);
+        // console.log(data);
         let gameId 
-        if(data && data.gameId){
+        if (data && data.gameId && data.action === "initGame"){
             gameId = data.gameId
             socket.join(gameId);
+            // console.log('Un usuario se ha conectado a la sala: '+gameId);
+            io.to(gameId).emit('joinedGame', `La Partida a comenzado`);
         }
         
-        if (data && data.action === "playGame" ){
-            console.log("comienza el juego");
+        if (data && data.action === "initGame" ){
+
+            // console.log("comienza el juego");
             
             if (!timers[gameId]) {
 
                 let endTime = moment().add(data.time, 'seconds')
+                io.to(gameId).emit('initGame', `La Partida a comenzado`);
 
                 timers[gameId] = setInterval(() => {
                     
