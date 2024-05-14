@@ -7,20 +7,20 @@ let timers: { [key: string]: NodeJS.Timeout } = {};
 export const handleSocketConnection = (io: Server, socket: Socket) => {
     
     socket.on('joinGame', (data) => {
-        // console.log('Un usuario se ha conectado');
+        console.log('Un usuario se ha conectado');
 
-        // console.log(data);
+        console.log(data);
         let gameId 
-        if (data && data.gameId && data.action === "initGame"){
+        if (data && data.gameId && data.action === "player"){
             gameId = data.gameId
             socket.join(gameId);
-            // console.log('Un usuario se ha conectado a la sala: '+gameId);
-            io.to(gameId).emit('joinedGame', `La Partida a comenzado`);
+            console.log('Un usuario se ha conectado a la sala: '+gameId);
+            // io.to(gameId).emit('joinedGame', `Te haz unido a la partida`);
         }
         
         if (data && data.action === "initGame" ){
-
-            // console.log("comienza el juego");
+            gameId = data.gameId
+            console.log("comienza el juego");
             
             if (!timers[gameId]) {
 
@@ -39,7 +39,7 @@ export const handleSocketConnection = (io: Server, socket: Socket) => {
                         console.log('¡Tiempo agotado! partida: ' + gameId);
                         clearInterval(timers[gameId]);
                         delete timers[gameId];
-                        io.to(gameId).emit('endGame', `${mins}:${secs}`);  
+                        io.to(gameId).emit('endGame', `¡Partida Finalizada!`);
                     } else {
                         io.to(gameId).emit('timer', `${mins}:${secs}`);
                     }
